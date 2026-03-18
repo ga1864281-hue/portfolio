@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>G Aravind — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&family=Chakra+Petch:wght@300;400;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --m:#ff00ff;
+  --c:#00f0ff;
+  --v:#7b2fff;
+  --bg:#04000a;
+  --bg2:#07000f;
+  --text:#e8d0ff;
+  --dim:#7a4a99;
+  --border:#ff00ff22;
+  --card:#0a000f;
+  --gm:0 0 8px #ff00ff,0 0 24px #ff00ff88,0 0 48px #ff00ff44;
+  --gc:0 0 8px #00f0ff,0 0 24px #00f0ff88,0 0 48px #00f0ff44;
+  --gs:0 0 14px #ff00ff,0 0 40px #ff00ffaa,0 0 80px #ff00ff55;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Chakra Petch',sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cur {
+  width:20px; height:20px;
+  position:fixed; pointer-events:none; z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:all .2s;
+}
+#cur svg { width:100%; height:100%; }
+#cur2 {
+  width:5px; height:5px;
+  background:var(--m); border-radius:50%;
+  position:fixed; pointer-events:none; z-index:9999;
+  transform:translate(-50%,-50%);
+  box-shadow:var(--gm);
+}
+#trails { position:fixed; inset:0; pointer-events:none; z-index:9997; }
+
+/* ── BG CANVAS ── */
+#bgc { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+/* ── GRID OVERLAY ── */
+body::before {
+  content:''; position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(255,0,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,240,255,.025) 1px,transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none; z-index:1;
+  mask-image:radial-gradient(ellipse 90% 90% at 50% 50%,black,transparent);
+}
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:300;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:20px 48px;
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  background:rgba(4,0,10,.85);
+}
+.logo {
+  font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem;
+  background:linear-gradient(90deg,var(--m),var(--c));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  filter:drop-shadow(0 0 10px #ff00ff88);
+  text-decoration:none; letter-spacing:2px;
+}
+.nav-links { display:flex; gap:36px; list-style:none; }
+.nav-links a {
+  font-family:'Space Mono',monospace; font-size:.7rem;
+  color:var(--dim); text-decoration:none; letter-spacing:3px;
+  text-transform:uppercase; transition:color .3s,text-shadow .3s;
+}
+.nav-links a:hover { color:var(--m); text-shadow:var(--gm); }
+
+main { position:relative; z-index:2; }
+
+/* ══════════════════════════
+   HERO
+══════════════════════════ */
+#hero {
+  min-height:100vh;
+  display:flex; flex-direction:column;
+  align-items:flex-start; justify-content:center;
+  padding:0 10vw;
+  position:relative; overflow:hidden;
+}
+
+.hex-deco { position:absolute; pointer-events:none; opacity:0; }
+.hex-deco svg { width:100%; height:100%; }
+.hd1 { width:180px;height:180px; right:12vw;top:15%; animation:hexFloat1 8s ease-in-out infinite,hexFade 1s ease .8s forwards; }
+.hd2 { width:100px;height:100px; right:22vw;top:60%; animation:hexFloat2 11s ease-in-out infinite,hexFade 1s ease 1.2s forwards; }
+.hd3 { width:60px; height:60px;  right:8vw; top:70%; animation:hexFloat1 7s ease-in-out infinite 1s,hexFade 1s ease 1.5s forwards; }
+
+.hero-pre {
+  font-family:'Space Mono',monospace; font-size:.78rem;
+  color:var(--c); letter-spacing:5px; text-shadow:var(--gc);
+  margin-bottom:20px; animation:fu .7s ease both;
+}
+.hero-name {
+  font-family:'Syne',sans-serif; font-weight:800;
+  font-size:clamp(3rem,8vw,7rem); line-height:1.05; letter-spacing:-2px;
+  margin-bottom:6px;
+}
+.n1 {
+  display:block;
+  background:linear-gradient(135deg,var(--m),var(--c));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  filter:drop-shadow(0 0 30px #ff00ff66);
+  animation:fu .7s ease .15s both, namePulse 5s ease-in-out infinite 2s;
+}
+.n2 {
+  display:block;
+  background:linear-gradient(135deg,var(--c),var(--v));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  filter:drop-shadow(0 0 20px #00f0ff55);
+  animation:fu .7s ease .25s both;
+}
+
+.hero-role {
+  font-family:'Space Mono',monospace; font-size:clamp(.78rem,2vw,1rem);
+  color:var(--dim); letter-spacing:3px;
+  margin-bottom:32px; animation:fu .7s ease .3s both;
+  display:flex; align-items:center; gap:10px; min-height:1.4em;
+}
+.role-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--m); box-shadow:var(--gm);
+  animation:blink 1.2s step-end infinite; flex-shrink:0;
+}
+
+.hero-tags {
+  display:flex; flex-wrap:wrap; gap:10px;
+  margin-bottom:40px; animation:fu .7s ease .45s both;
+}
+.htag {
+  font-family:'Space Mono',monospace; font-size:.68rem;
+  padding:8px 16px; border:1px solid var(--border);
+  color:var(--dim); background:var(--card); letter-spacing:2px;
+  clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);
+  transition:all .3s; cursor:default;
+}
+.htag:hover { border-color:var(--m); color:var(--m); box-shadow:var(--gm); background:#150020; }
+
+.hero-btns { display:flex; gap:16px; flex-wrap:wrap; animation:fu .7s ease .6s both; }
+
+.scroll-hint {
+  position:absolute; bottom:36px; left:50%; transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  font-family:'Space Mono',monospace; font-size:.6rem;
+  color:var(--dim); letter-spacing:3px;
+  animation:fu 1s ease 1.5s both;
+}
+.scroll-line {
+  width:1px; height:50px;
+  background:linear-gradient(var(--m),transparent);
+  box-shadow:0 0 6px var(--m);
+  animation:scrollPulse 2s ease-in-out infinite;
+}
+
+/* ══════════════════════════
+   ABOUT
+══════════════════════════ */
+#about { padding:100px 10vw; background:var(--bg2); }
+
+.about-inner {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:72px; align-items:start;
+}
+
+.about-txt {
+  font-size:.98rem; line-height:2;
+  color:var(--text); opacity:.9;
+  margin-bottom:22px; font-weight:300;
+}
+.about-txt strong { color:var(--m); font-weight:600; }
+.about-txt em { color:var(--c); font-style:normal; }
+
+.fun-row { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:22px; }
+.fun-tag {
+  font-family:'Space Mono',monospace; font-size:.64rem;
+  padding:7px 13px; border:1px solid var(--border);
+  color:var(--dim); background:var(--card); letter-spacing:1px;
+  clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%);
+  transition:all .3s; cursor:default;
+}
+.fun-tag:hover { border-color:var(--m); color:var(--m); box-shadow:var(--gm); background:#150020; }
+
+/* music card */
+.music-card {
+  border:1px solid rgba(0,240,255,.2); background:var(--card);
+  padding:20px 24px; display:flex; align-items:center; gap:18px;
+  position:relative; overflow:hidden; transition:all .4s;
+  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+}
+.music-card:hover { border-color:var(--c); box-shadow:var(--gc); }
+.music-icon {
+  width:52px; height:52px; border-radius:50%;
+  background:linear-gradient(135deg,var(--v),var(--m));
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.4rem; flex-shrink:0; box-shadow:0 0 20px #ff00ff55;
+  animation:spinVinyl 4s linear infinite paused;
+}
+.music-card:hover .music-icon { animation-play-state:running; }
+.music-label { font-family:'Space Mono',monospace; font-size:.6rem; color:var(--dim); letter-spacing:3px; margin-bottom:4px; }
+.music-song {
+  font-family:'Syne',sans-serif; font-weight:700; font-size:1rem;
+  background:linear-gradient(90deg,var(--m),var(--c));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.music-wave { display:flex; gap:3px; align-items:flex-end; margin-top:8px; }
+.music-wave span {
+  display:block; width:3px; background:var(--c); border-radius:2px;
+  animation:wave 1s ease-in-out infinite;
+}
+.music-wave span:nth-child(1){height:8px;animation-delay:0s}
+.music-wave span:nth-child(2){height:16px;animation-delay:.15s}
+.music-wave span:nth-child(3){height:10px;animation-delay:.3s}
+.music-wave span:nth-child(4){height:20px;animation-delay:.1s}
+.music-wave span:nth-child(5){height:12px;animation-delay:.25s}
+.music-wave span:nth-child(6){height:6px;animation-delay:.4s}
+.music-card:hover .music-wave span { box-shadow:0 0 6px var(--c); }
+
+.about-right { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.stat-box {
+  border:1px solid var(--border); background:var(--card);
+  padding:28px 22px; position:relative; overflow:hidden; transition:all .3s;
+}
+.stat-box::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,var(--v),var(--m),var(--c));
+  transform:scaleX(0); transform-origin:left; transition:transform .4s;
+  box-shadow:0 0 10px var(--m);
+}
+.stat-box:hover { border-color:var(--m); transform:translateY(-4px); box-shadow:0 12px 40px #ff00ff12; }
+.stat-box:hover::after { transform:scaleX(1); }
+.sbn {
+  font-family:'Syne',sans-serif; font-weight:800; font-size:2rem;
+  background:linear-gradient(90deg,var(--m),var(--c));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  filter:drop-shadow(0 0 10px #ff00ff55);
+}
+.sbl {
+  font-family:'Space Mono',monospace; font-size:.6rem;
+  color:var(--dim); letter-spacing:2px; text-transform:uppercase; margin-top:4px;
+}
+
+/* ══════════════════════════
+   SKILLS (compact)
+══════════════════════════ */
+#skills { padding:80px 10vw; }
+
+.skills-compact { display:flex; flex-wrap:wrap; gap:52px; }
+.skill-group { min-width:200px; }
+
+.skill-cat {
+  font-family:'Space Mono',monospace; font-size:.68rem;
+  color:var(--c); letter-spacing:3px; text-transform:uppercase;
+  text-shadow:var(--gc); margin-bottom:16px;
+}
+.pills { display:flex; flex-wrap:wrap; gap:9px; }
+
+.pill {
+  font-family:'Space Mono',monospace; font-size:.66rem;
+  padding:7px 15px; border:1px solid var(--border);
+  color:var(--dim); background:var(--card); letter-spacing:1px;
+  clip-path:polygon(7px 0,100% 0,calc(100% - 7px) 100%,0 100%);
+  transition:all .25s; cursor:default;
+}
+.pill:hover { border-color:var(--m); color:var(--m); background:#150020; box-shadow:var(--gm); transform:translateY(-2px); }
+.pill.cyan { border-color:rgba(0,240,255,.3); color:#00f0ffaa; }
+.pill.cyan:hover { border-color:var(--c); color:var(--c); box-shadow:var(--gc); }
+.pill.game { border-color:rgba(123,47,255,.4); color:#9b6fff; background:rgba(123,47,255,.08); }
+.pill.game:hover { border-color:var(--v); color:#c4a0ff; box-shadow:0 0 14px var(--v); }
+
+/* ══════════════════════════
+   CONTACT
+══════════════════════════ */
+#contact { padding:100px 10vw; background:var(--bg2); text-align:center; }
+
+.contact-sub {
+  font-family:'Space Mono',monospace; font-size:.74rem;
+  color:var(--dim); letter-spacing:4px; margin-bottom:52px;
+}
+.contact-cards {
+  display:flex; justify-content:center; flex-wrap:wrap;
+  gap:20px; margin-bottom:48px;
+}
+.ccard {
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+  border:1px solid var(--border); background:var(--card);
+  padding:28px 32px; text-decoration:none;
+  transition:all .3s; min-width:180px;
+  clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);
+}
+.ccard:hover { border-color:var(--m); box-shadow:var(--gm); background:#150020; transform:translateY(-4px); }
+.cc-icon { font-size:1.6rem; line-height:1; }
+.cc-label { font-family:'Space Mono',monospace; font-size:.58rem; color:var(--dim); letter-spacing:3px; text-transform:uppercase; }
+.cc-val { font-family:'Chakra Petch',sans-serif; font-size:.8rem; color:var(--text); letter-spacing:1px; transition:color .3s; }
+.ccard:hover .cc-val { color:var(--m); }
+
+/* ── FOOTER ── */
+footer {
+  border-top:1px solid var(--border); padding:26px 10vw;
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:'Space Mono',monospace; font-size:.65rem;
+  color:var(--dim); letter-spacing:2px;
+  position:relative; z-index:2;
+}
+.fhrt { color:var(--m); text-shadow:var(--gm); }
+
+/* ── SECTION HEADER ── */
+.sh { display:flex; align-items:center; gap:20px; margin-bottom:56px; }
+.sn { font-family:'Space Mono',monospace; font-size:.68rem; color:var(--m); letter-spacing:3px; }
+.st {
+  font-family:'Syne',sans-serif; font-weight:800; font-size:clamp(1.4rem,3vw,2rem);
+  background:linear-gradient(90deg,var(--m),var(--c));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  filter:drop-shadow(0 0 10px #ff00ff44); letter-spacing:2px; text-transform:uppercase;
+}
+.sl { flex:1; height:1px; background:linear-gradient(90deg,var(--m),var(--c),transparent); box-shadow:0 0 6px var(--m); }
+
+/* ── BUTTONS ── */
+.btn {
+  font-family:'Space Mono',monospace; font-size:.72rem; letter-spacing:3px;
+  text-transform:uppercase; text-decoration:none; padding:14px 30px;
+  position:relative; overflow:hidden; cursor:pointer;
+  transition:color .3s,box-shadow .3s; display:inline-block;
+}
+.btn-m { border:1px solid var(--m); color:var(--m); clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px)); }
+.btn-c { border:1px solid var(--c); color:var(--c); clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px); }
+.btn::before { content:''; position:absolute; inset:0; transform:translateY(100%); transition:transform .35s; z-index:-1; }
+.btn-m::before { background:linear-gradient(135deg,var(--m),var(--v)); }
+.btn-c::before { background:linear-gradient(135deg,var(--c),var(--v)); }
+.btn:hover::before { transform:translateY(0); }
+.btn-m:hover { color:#fff; box-shadow:var(--gs); }
+.btn-c:hover { color:#fff; box-shadow:var(--gc); }
+
+/* ── REVEAL ── */
+.reveal { opacity:0; transform:translateY(28px); transition:opacity .8s ease,transform .8s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* ── KEYFRAMES ── */
+@keyframes fu { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+@keyframes namePulse {
+  0%,100%{filter:drop-shadow(0 0 20px #ff00ff55)}
+  50%{filter:drop-shadow(0 0 55px #ff00ffbb) drop-shadow(0 0 90px #00f0ff44)}
+}
+@keyframes scrollPulse { 0%,100%{opacity:.3;transform:scaleY(.6)} 50%{opacity:1;transform:scaleY(1)} }
+@keyframes wave { 0%,100%{transform:scaleY(.5)} 50%{transform:scaleY(1.2)} }
+@keyframes spinVinyl { to{transform:rotate(360deg)} }
+@keyframes hexFloat1 { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-24px) rotate(15deg)} }
+@keyframes hexFloat2 { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(20px) rotate(-10deg)} }
+@keyframes hexFade { to{opacity:1} }
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  nav{padding:16px 20px}
+  #hero,#about,#skills,#contact{padding-left:6vw;padding-right:6vw}
+  .about-inner{grid-template-columns:1fr;gap:40px}
+  .skills-compact{flex-direction:column;gap:32px}
+  .hd1,.hd2,.hd3{display:none}
+  footer{flex-direction:column;gap:8px;text-align:center}
+}
+@media(max-width:600px){
+  .nav-links{display:none}
+  .about-right{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgc"></canvas>
+<div id="trails"></div>
+<div id="cur">
+  <svg viewBox="0 0 20 20" fill="none">
+    <polygon points="10,1 19,10 10,19 1,10" stroke="#ff00ff" stroke-width="1.2"/>
+    <polygon points="10,6 15,10 10,14 5,10" stroke="#00f0ff" stroke-width=".8" fill="rgba(255,0,255,.07)"/>
+  </svg>
+</div>
+<div id="cur2"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="logo">◈ ARAVIND.DEV</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hex-deco hd1">
+    <svg viewBox="0 0 100 100" fill="none">
+      <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" stroke="#ff00ff" stroke-width="1" fill="rgba(255,0,255,.04)"/>
+      <polygon points="50,18 77,33.5 77,66.5 50,82 23,66.5 23,33.5" stroke="#00f0ff" stroke-width=".6" fill="none"/>
+    </svg>
+  </div>
+  <div class="hex-deco hd2">
+    <svg viewBox="0 0 100 100" fill="none">
+      <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" stroke="#7b2fff" stroke-width="1.2" fill="rgba(123,47,255,.06)"/>
+    </svg>
+  </div>
+  <div class="hex-deco hd3">
+    <svg viewBox="0 0 100 100" fill="none">
+      <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" stroke="#00f0ff" stroke-width="1.5" fill="rgba(0,240,255,.05)"/>
+    </svg>
+  </div>
+
+  <p class="hero-pre">◈ HELLO WORLD — PORTFOLIO.EXE</p>
+
+  <h1 class="hero-name">
+    <span class="n1">G ARAVIND</span>
+  </h1>
+
+  <p class="hero-role">
+    <span class="role-dot"></span>
+    <span id="typed-text">B.TECH ROBOTICS &amp; AI · RIT KOTTAYAM</span>
+  </p>
+
+  <div class="hero-tags">
+    <span class="htag">🐍 Python Dev</span>
+    <span class="htag">🔐 Cyber Security</span>
+    <span class="htag">🎮 Valorant</span>
+    <span class="htag">🏴‍☠️ Uncharted 4</span>
+    <span class="htag">🎵 Music Lover</span>
+  </div>
+
+  <div class="hero-btns">
+    <a href="#about" class="btn btn-m">Know Me</a>
+    <a href="#contact" class="btn btn-c">Contact Me</a>
+  </div>
+
+  <div class="scroll-hint">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ══ ABOUT ══ -->
+<section id="about">
+  <div class="sh">
+    <span class="sn">01</span>
+    <h2 class="st">About Me</h2>
+    <div class="sl"></div>
+  </div>
+
+  <div class="about-inner">
+    <div class="about-left reveal">
+      <p class="about-txt">
+        Hey! I'm <strong>G Aravind</strong> — a B.Tech student doing 
+        <em>Robotics &amp; Artificial Intelligence</em> at RIT Kottayam, Kerala. 
+        Let's be honest — I'm a pretty <strong>lazy person</strong>. But the moment 
+        something actually interests me, I get weirdly obsessed with it.
+      </p>
+      <p class="about-txt">
+        That's how coding happened. I mess around with <strong>Python</strong> — 
+        writing scripts, automating stuff, breaking things just to see what happens. 
+        I'm also creeping into <em>Cyber Security</em> because thinking like a hacker 
+        sounds a lot more fun than regular engineering subjects.
+      </p>
+      <p class="about-txt">
+        Outside of that? I'm either deep in a <strong>Valorant</strong> ranked game 
+        (yes I rage, no I won't stop) or replaying <em>Uncharted 4</em> for the 
+        nth time because Nathan Drake literally never gets old. 
+        And Samjhawan 🎵 has been on repeat since forever — don't judge.
+      </p>
+
+      <div class="fun-row">
+        <span class="fun-tag">😴 Laziness is my default</span>
+        <span class="fun-tag">🎯 Valorant addict</span>
+        <span class="fun-tag">🏴‍☠️ Uncharted 4 GOAT</span>
+        <span class="fun-tag">🎵 Samjhawan on loop</span>
+        <span class="fun-tag">☕ Runs on chai</span>
+      </div>
+
+      <div class="music-card">
+        <div class="music-icon">🎵</div>
+        <div class="music-info">
+          <p class="music-label">// NOW PLAYING — ALL TIME FAV</p>
+          <p class="music-song">Samjhawan</p>
+          <div class="music-wave">
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-right reveal">
+      <div class="stat-box">
+        <div class="sbn">RIT</div>
+        <div class="sbl">Kottayam, Kerala</div>
+      </div>
+      <div class="stat-box">
+        <div class="sbn">RAI</div>
+        <div class="sbl">Robotics &amp; AI</div>
+      </div>
+      <div class="stat-box">
+        <div class="sbn">🎮</div>
+        <div class="sbl">Valorant / Uncharted</div>
+      </div>
+      <div class="stat-box">
+        <div class="sbn">🎵</div>
+        <div class="sbl">Music Addict</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SKILLS ══ -->
+<section id="skills">
+  <div class="sh">
+    <span class="sn">02</span>
+    <h2 class="st">Skills</h2>
+    <div class="sl"></div>
+  </div>
+
+  <div class="skills-compact reveal">
+    <div class="skill-group">
+      <p class="skill-cat">// I Know</p>
+      <div class="pills">
+        <span class="pill">Python</span>
+        <span class="pill">Linux</span>
+        <span class="pill">Git</span>
+        <span class="pill">HTML / CSS</span>
+        <span class="pill">Arduino</span>
+        <span class="pill">Nmap</span>
+        <span class="pill">Wireshark</span>
+      </div>
+    </div>
+
+    <div class="skill-group">
+      <p class="skill-cat">// Learning</p>
+      <div class="pills">
+        <span class="pill cyan">Ethical Hacking</span>
+        <span class="pill cyan">CTF Challenges</span>
+        <span class="pill cyan">Machine Learning</span>
+        <span class="pill cyan">Kali Linux</span>
+      </div>
+    </div>
+
+    <div class="skill-group">
+      <p class="skill-cat">// Gaming Stack 🎮</p>
+      <div class="pills">
+        <span class="pill game">Valorant</span>
+        <span class="pill game">Uncharted 4</span>
+        <span class="pill game">FPS Tactics</span>
+        <span class="pill game">Story Mode</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact">
+  <div class="sh" style="justify-content:center">
+    <span class="sn">03</span>
+    <h2 class="st">Contact</h2>
+    <div class="sl"></div>
+  </div>
+
+  <p class="contact-sub reveal">◈ LET'S CONNECT — OPEN TO COLLABS &amp; OPPORTUNITIES</p>
+
+  <div class="contact-cards reveal">
+    <a href="mailto:ga1864281@gmail.com" class="ccard">
+      <span class="cc-icon">✉️</span>
+      <span class="cc-label">Email</span>
+      <span class="cc-val">ga1864281@gmail.com</span>
+    </a>
+    <a href="https://github.com/ga1864281-hue" class="ccard" target="_blank">
+      <span class="cc-icon">◈</span>
+      <span class="cc-label">GitHub</span>
+      <span class="cc-val">ga1864281-hue</span>
+    </a>
+    <a href="https://www.linkedin.com/in/g-aravind-255874380" class="ccard" target="_blank">
+      <span class="cc-icon">◉</span>
+      <span class="cc-label">LinkedIn</span>
+      <span class="cc-val">g-aravind</span>
+    </a>
+  </div>
+
+  <a href="mailto:ga1864281@gmail.com" class="btn btn-m reveal">Send a Message</a>
+</section>
+
+</main>
+
+<footer>
+  <span>© 2026 G ARAVIND</span>
+  <span>BUILT WITH <span class="fhrt">♥</span> + CODE</span>
+  <span>RIT KOTTAYAM · KERALA</span>
+</footer>
+
+<script>
+/* ── BG PARTICLES ── */
+const canvas = document.getElementById('bgc');
+const ctx = canvas.getContext('2d');
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+const MOUSE = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+document.addEventListener('mousemove', e => { MOUSE.x = e.clientX; MOUSE.y = e.clientY; });
+
+let pts = [];
+function initPts() {
+  pts = [];
+  const N = Math.floor((canvas.width * canvas.height) / 13000);
+  for (let i = 0; i < N; i++) pts.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.5 + .3,
+    vx: (Math.random() - .5) * .22,
+    vy: (Math.random() - .5) * .22,
+    c: Math.random() > .5 ? '255,0,255' : '0,240,255',
+    a: Math.random() * .45 + .15,
+    p: Math.random() * Math.PI * 2
+  });
+}
+initPts();
+window.addEventListener('resize', initPts);
+
+(function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < pts.length; i++) {
+    for (let j = i + 1; j < pts.length; j++) {
+      const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y, d = Math.hypot(dx, dy);
+      if (d < 100) {
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(255,0,255,${(1 - d / 100) * .06})`;
+        ctx.lineWidth = .35;
+        ctx.moveTo(pts[i].x, pts[i].y);
+        ctx.lineTo(pts[j].x, pts[j].y);
+        ctx.stroke();
+      }
+    }
+    const mx = pts[i].x - MOUSE.x, my = pts[i].y - MOUSE.y, md = Math.hypot(mx, my);
+    if (md < 150) {
+      ctx.beginPath();
+      ctx.strokeStyle = `rgba(0,240,255,${(1 - md / 150) * .12})`;
+      ctx.lineWidth = .45;
+      ctx.moveTo(pts[i].x, pts[i].y);
+      ctx.lineTo(MOUSE.x, MOUSE.y);
+      ctx.stroke();
+    }
+    pts[i].p += .016;
+    const a = pts[i].a * (Math.sin(pts[i].p) * .3 + .7);
+    ctx.beginPath();
+    ctx.arc(pts[i].x, pts[i].y, pts[i].r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${pts[i].c},${a})`;
+    ctx.fill();
+    pts[i].x += pts[i].vx; pts[i].y += pts[i].vy;
+    if (pts[i].x < 0) pts[i].x = canvas.width;
+    if (pts[i].x > canvas.width) pts[i].x = 0;
+    if (pts[i].y < 0) pts[i].y = canvas.height;
+    if (pts[i].y > canvas.height) pts[i].y = 0;
+  }
+  requestAnimationFrame(draw);
+})();
+
+/* ── CURSOR ── */
+const cur = document.getElementById('cur');
+const cur2 = document.getElementById('cur2');
+const tr = document.getElementById('trails');
+
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top = e.clientY + 'px';
+  cur2.style.left = e.clientX + 'px';
+  cur2.style.top = e.clientY + 'px';
+
+  const d = document.createElement('div');
+  d.style.cssText = `position:fixed;left:${e.clientX}px;top:${e.clientY}px;
+    width:4px;height:4px;border-radius:50%;pointer-events:none;
+    background:${Math.random() > .5 ? '#ff00ff' : '#00f0ff'};
+    transform:translate(-50%,-50%);box-shadow:0 0 6px currentColor;
+    transition:opacity .5s,transform .5s;opacity:.65;z-index:9996`;
+  tr.appendChild(d);
+  requestAnimationFrame(() => { d.style.opacity = '0'; d.style.transform = 'translate(-50%,-50%) scale(0)'; });
+  setTimeout(() => d.remove(), 600);
+});
+
+document.querySelectorAll('a,button,.htag,.pill,.stat-box,.ccard,.music-card,.fun-tag').forEach(el => {
+  el.addEventListener('mouseenter', () => { cur.style.transform = 'translate(-50%,-50%) scale(1.9)'; });
+  el.addEventListener('mouseleave', () => { cur.style.transform = 'translate(-50%,-50%) scale(1)'; });
+});
+
+/* ── CLICK BURST ── */
+document.addEventListener('click', e => {
+  for (let i = 0; i < 10; i++) {
+    const p = document.createElement('div');
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 65 + 18;
+    p.style.cssText = `position:fixed;left:${e.clientX}px;top:${e.clientY}px;
+      width:${Math.random() * 4 + 2}px;height:${Math.random() * 4 + 2}px;
+      border-radius:50%;pointer-events:none;z-index:9998;
+      background:${Math.random() > .5 ? '#ff00ff' : '#00f0ff'};
+      box-shadow:0 0 8px currentColor;transform:translate(-50%,-50%);
+      transition:all .7s ease-out;opacity:1`;
+    document.body.appendChild(p);
+    requestAnimationFrame(() => {
+      p.style.left = (e.clientX + Math.cos(angle) * speed) + 'px';
+      p.style.top = (e.clientY + Math.sin(angle) * speed) + 'px';
+      p.style.opacity = '0';
+      p.style.transform = 'translate(-50%,-50%) scale(0)';
+    });
+    setTimeout(() => p.remove(), 800);
+  }
+});
+
+/* ── SCROLL REVEAL ── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: .08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+/* ── TYPING ANIMATION ── */
+const typedEl = document.getElementById('typed-text');
+const lines = [
+  'B.TECH ROBOTICS & AI · RIT KOTTAYAM',
+  'PYTHON DEVELOPER IN MAKING',
+  'CYBER SECURITY EXPLORER',
+  'VALORANT RANKED GRINDER 🎮',
+  'MUSIC LOVER 🎵'
+];
+let li = 0, ci = 0, deleting = false;
+
+function type() {
+  const target = lines[li];
+  if (!deleting) {
+    typedEl.textContent = target.slice(0, ++ci);
+    if (ci === target.length) { deleting = true; setTimeout(type, 2400); return; }
+  } else {
+    typedEl.textContent = target.slice(0, --ci);
+    if (ci === 0) { deleting = false; li = (li + 1) % lines.length; }
+  }
+  setTimeout(type, deleting ? 36 : 76);
+}
+setTimeout(type, 1400);
+</script>
+</body>
+</html>
